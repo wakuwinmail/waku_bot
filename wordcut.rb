@@ -6,8 +6,8 @@ File.open("input.txt","r:utf-8") do |file|
         str=tweet.split(" ")#半角スペースで区切る
         str.insert(0," ")#処理のしやすさの観点から先頭に半角スペースを追加
         str.push(" ")#同様に末尾に半角スペースを追加
-        for i in 0..str.length-3 do
-            words.puts(str[i]+" "+str[i+1]+" "+str[i+2])#3単語ごとに出力する。
+        str.each_cons(3) do |w1, w2, w3|
+          words.puts(w1+" "+w2+" "+w3)#3単語ごとに出力する。
         end
     end
 end

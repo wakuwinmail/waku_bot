@@ -10,30 +10,32 @@ File.open("data.txt","r:utf-8") do |file|
     file.each_line do |words|
         if /^ / =~ words then
             head.push(words)
-        elsif !words.include?("  ") then
+        elsif / $/ =~ words then
+            foot.push(words)
+        else
             body.push(words)
-        else foot.push(words)
         end
     end
 end
 
-sentence=sentence+head[rand(0..head.length-1)].chomp!
+sentence=sentence+head.sample.chomp!
 #puts head.length
 #=begin
 while true do
     temp=sentence.split(" ")
+    searchstr = "#{temp[-2]} #{temp[-1]}"
     footflag=false
     foot.each do |words|
-        if /#{temp[temp.length-2]} #{temp[temp.length-1]}/ =~ words then
+        if words.start_with?(searchstr) then
             footflag=true
         end
         break if footflag
     end
     bodyflag=false
     body.each do |words|
-        if /^#{temp[temp.length-2]} #{temp[temp.length-1]}/ =~ words then
+        if words.start_with?(searchstr) then
             a=words.split(" ")
-            sentence=sentence+" "+a[a.length-1]
+            sentence=sentence+" "+a[-1]
             bodyflag=true
         end
         break if bodyflag
