@@ -1,11 +1,10 @@
 require 'twitter'
+require 'yaml'
 
-client = Twitter::REST::Client.new do |config|
-  config.consumer_key        = "XXXXXXXX"
-  config.consumer_secret     = "YYYYYYYY"
-  config.access_token        = "ZZZZZZZZ"
-  config.access_token_secret = "WWWWWWWW"
-end
+config = YAML.load_file("config.yml")
+
+client = Twitter::REST::Client.new(config)
+
 # tweet
   File.open('result.txt',"r:utf-8") do |file|#wordconnectからの出力ファイルを読み込み
     file.each_line do |text|
