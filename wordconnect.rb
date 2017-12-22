@@ -1,48 +1,39 @@
-result=File.open("result.txt","w:utf-8")
+head = []
+body = []
+sentence = ""
 
-head=[]
-body=[]
-foot=[]
-sentence=""
-temp=[]
-
-File.open("data.txt","r:utf-8") do |file|
+File.open("data.txt", "r:utf-8") do |file|
     file.each_line do |words|
+        words.chomp!
         if /^ / =~ words then
             head.push(words)
-        elsif / $/ =~ words then
-            foot.push(words)
         else
             body.push(words)
         end
     end
 end
 
-sentence=sentence+head.sample.chomp!
-#puts head.length
-#=begin
+# 空白で始まる行をランダムで選ぶ。後ろ２つの形態素を拾って開始
+# （split の第２引数は空文字も区切るためのもの）
+temp = head.sample.split(" ", -1).slice(-2..-1)
+sentence += temp.join("")
+
 while true do
-    temp=sentence.split(" ")
-    searchstr = "#{temp[-2]} #{temp[-1]}"
-    footflag=false
-    foot.each do |words|
-        if words.start_with?(searchstr) then
-            footflag=true
-        end
-        break if footflag
-    end
-    bodyflag=false
-    body.each do |words|
-        if words.start_with?(searchstr) then
-            a=words.split(" ")
-            sentence=sentence+" "+a[-1]
-            bodyflag=true
-        end
-        break if bodyflag
-    end
-    #puts "#{temp[temp.length-2]} #{temp[temp.length-1]}"
-    break if sentence.length>130 || footflag || footflag==bodyflag
+    # 文末だったら終了（初回で形態素１つの可能性があるのでこの処理は最初にやる）
+    break if temp.last == ""
+
+    # searchstr で始まる行を検索する。見つからなければ終了（見つからないことはないはず）
+    searchstr = temp.join(" ")
+    selected = body.select {|words| words.start_with?(searchstr) }
+    break if selected.empty?
+
+    # ランダムで形態素を拾う。文が長ければ終了
+    temp.shift
+    temp << selected.sample.split(" ", -1).last
+    break if sentence.length + temp.last.length > 130
+    sentence += temp.last
 end
-result.puts(sentence.gsub(" ",""))
-#=end
-result.close
+
+File.open("result.txt", "w:utf-8") do |file|
+    file.puts(sentence)
+end
