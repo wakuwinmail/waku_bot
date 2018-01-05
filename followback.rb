@@ -19,3 +19,5 @@ client.follower_ids.each do |id|#フォロワーのIDを取得
   client.follow(id) if flag
   sleep(61)#API制限回避用
 end
+
+ngwords.close

@@ -43,3 +43,4 @@ File.open("#{dir_name}/#{file_name}.txt","w:utf-8") do |file|#データベース
   end
 end
 data.close
+ngwords.close
